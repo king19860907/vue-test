@@ -1,40 +1,53 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+      <!--
+        v-on:changeFooterMsg 监听changeFooterMsg这个事件
+        一旦监听到了这个事件，则调用updateFooterMsg方法，这个方法再父组件自己这边定义
+        $event为子组件穿过来的内容
+      -->
+      <Header v-on:changeFooterMsg="updateFooterMsg($event)"  :msg="headerMsg"></Header>
+      <!--:data在User.vue中绑定的prop名为data,并且传入了一个数组datas-->
+      <users :data="datas"></users>
+      <users :data="datas"></users>
+      <Footer :msg="footerMsg"></Footer>
   </div>
 </template>
 
 <script>
+import Users from './Users';
+import Header from './Header';
+import Footer from './Footer';
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
+  data(){
+    return {
+      datas:[
+          {name:'majun1',code:'1001'},
+          {name:'majun2',code:'1002'},
+          {name:'majun3',code:'1003'},
+      ],
+      headerMsg:'World Top',
+      footerMsg:'World Buttom',
+    }
+  },
+  components:{
+    /**
+     * "users"代表template中标签的名字,即<users></users>
+     * Users代表上面 import Users from 这块定义的名字
+     */
+    "users":Users,
+    "Header":Header,
+    "Footer":Footer,
+  },
+  methods:{
+    updateFooterMsg(msg){
+      console.log(msg);
+      //这样就获取到了从子组件传过来的内容
+      this.footerMsg = msg.msg;
+    }
+  },
+  mounted(){
   }
 }
 </script>
